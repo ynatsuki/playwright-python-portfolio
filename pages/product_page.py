@@ -9,6 +9,7 @@ class ProductPage:
         self.add_to_cart_button = self.page.locator("#add-to-cart-sauce-labs-backpack")
         self.remove_from_cart_button = self.page.locator("#remove-sauce-labs-backpack")
         self.cart_icon = page.locator('[data-test="shopping-cart-badge"]')
+        self.sort_dropdown = self.page.locator('[data-test="product-sort-container"]')
 
     def is_loaded(self):
         return self.page.get_by_text("Product").is_visible()
@@ -28,3 +29,15 @@ class ProductPage:
     def go_to_cart(self):
         self.cart_icon.click()
         return CartPage(self.page)
+
+    def select_sort(self, sort_option):
+        self.sort_dropdown.select_option(sort_option)
+
+    def get_item_names(self):
+        return self.page.locator('[data-test="inventory-item"]').all_text_contents()
+
+    def get_item_prices(self):
+        prices = self.page.locator(
+            '[data-test="inventory-item-price"]'
+        ).all_text_contents()
+        return [float(price.replace("$", "")) for price in prices]
