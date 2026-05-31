@@ -1,5 +1,3 @@
-import pytest
-
 from pages.login_page import LoginPage
 from pages.product_page import ProductPage
 
@@ -14,7 +12,7 @@ def test_successful_login(page):
     assert product_page.is_loaded()
 
 
-def test_failed_login(page):
+def test_failed_login_incorrect_password(page):
     login_page = LoginPage(page)
     product_page = ProductPage(page)
 
@@ -24,55 +22,47 @@ def test_failed_login(page):
     assert not product_page.is_loaded()
 
 
-@pytest.mark.parametrize(
-    ("sort_value", "reverse"),
-    [
-        ("az", False),
-        ("za", True),
-    ],
-)
-def test_sort_items_by_name(product_page, sort_value, reverse):
-    product_page.select_sort(sort_value)
-    actual_names = product_page.get_item_names()
-    expected_names = sorted(actual_names, reverse=reverse)
-    assert actual_names == expected_names
+def test_failed_login_incorrect_username(page):
+    login_page = LoginPage(page)
+    product_page = ProductPage(page)
+
+    login_page.open()
+    login_page.login("wrong_username", "secret_sauce")
+
+    assert not product_page.is_loaded()
 
 
-@pytest.mark.parametrize(
-    ("sort_value", "reverse"),
-    [
-        ("lohi", False),
-        ("hilo", True),
-    ],
-)
-def test_sort_items_by_price(product_page, sort_value, reverse):
-    product_page.select_sort(sort_value)
-    actual_prices = product_page.get_item_prices()
-    expected_prices = sorted(actual_prices, reverse=reverse)
-    assert actual_prices == expected_prices
+def test_failed_login_empty_username(page):
+    login_page = LoginPage(page)
+    product_page = ProductPage(page)
+
+    login_page.open()
+    login_page.login("", "secret_sauce")
+
+    assert login_page.get_error_message() == "Epic sadface: Username is required"
+    assert not product_page.is_loaded()
 
 
-def test_add_and_remove_item_from_cart(product_page):
-    product_page.add_to_cart()
-    product_page.expect_cart_count(1)
+def test_failed_login_empty_password(page):
+    login_page = LoginPage(page)
+    product_page = ProductPage(page)
 
-    product_page.remove_from_cart()
-    product_page.expect_cart_count(0)
+    login_page.open()
+    login_page.login("standard_user", "")
+
+    assert login_page.get_error_message() == "Epic sadface: Password is required"
+    assert not product_page.is_loaded()
 
 
-def test_checkout(product_page):
-    product_page.add_to_cart()
+def test_failed_login_locked_out(page):
+    login_page = LoginPage(page)
+    product_page = ProductPage(page)
 
-    cart_page = product_page.go_to_cart()
-    checkout_page = cart_page.click_checkout()
+    login_page.open()
+    login_page.login("locked_out_user", "secret_sauce")
 
-    checkout_page.set_first_name("John")
-    checkout_page.set_last_name("Doe")
-    checkout_page.set_zip_code("12345")
-    checkout_overview_page = checkout_page.click_continue()
-    checkout_complete_page = checkout_overview_page.click_finish()
-
-    assert checkout_complete_page.is_complete_message_displayed()
-
-    product_page = checkout_complete_page.click_back_home()
-    assert product_page.is_loaded()
+    assert (
+        login_page.get_error_message()
+        == "Epic sadface: Sorry, this user has been locked out."
+    )
+    assert not product_page.is_loaded()

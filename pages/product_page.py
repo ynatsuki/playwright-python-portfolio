@@ -26,6 +26,12 @@ class ProductPage:
         else:
             expect(self.cart_icon).to_have_text(str(count))
 
+    def get_cart_count(self):
+        if not self.cart_icon.is_visible():
+            return 0
+
+        return int(self.cart_icon.text_content())
+
     def go_to_cart(self):
         self.cart_icon.click()
         return CartPage(self.page)
@@ -34,7 +40,9 @@ class ProductPage:
         self.sort_dropdown.select_option(sort_option)
 
     def get_item_names(self):
-        return self.page.locator('[data-test="inventory-item"]').all_text_contents()
+        return self.page.locator(
+            '[data-test="inventory-item-name"]'
+        ).all_text_contents()
 
     def get_item_prices(self):
         prices = self.page.locator(

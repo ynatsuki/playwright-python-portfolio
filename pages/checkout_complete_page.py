@@ -8,6 +8,7 @@ class CheckoutCompletePage:
         return self.thank_you_message.is_visible()
 
     def click_back_home(self):
+        # Import here to avoid circular imports
         from pages.product_page import ProductPage
 
         self.back_home_button.click()
