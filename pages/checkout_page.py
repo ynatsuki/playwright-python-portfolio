@@ -9,23 +9,23 @@ class CheckoutPage:
         self.zip_code_input = page.get_by_placeholder("Zip/Postal Code")
         self.continue_button = page.get_by_role("button", name="Continue")
 
-    def set_first_name(self, name):
+    def set_first_name(self, name: str) -> None:
         self.first_name_input.fill(name)
 
-    def set_last_name(self, name):
+    def set_last_name(self, name: str) -> None:
         self.last_name_input.fill(name)
 
-    def set_zip_code(self, code):
+    def set_zip_code(self, code: str) -> None:
         self.zip_code_input.fill(code)
 
-    def click_continue(self):
+    def click_continue(self) -> None:
         self.continue_button.click()
 
-    def go_to_checkout_overview(self):
+    def go_to_checkout_overview(self) -> CheckoutOverviewPage:
         self.continue_button.click()
         return CheckoutOverviewPage(self.page)
 
-    def is_error_message_displayed(self, error_type):
+    def is_error_message_displayed(self, error_type: str) -> bool:
         error_type = error_type.strip().lower()
 
         if error_type == "first_name":

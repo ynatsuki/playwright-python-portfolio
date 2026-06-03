@@ -1,4 +1,8 @@
-def test_checkout(product_page):
+from pages.checkout_page import CheckoutPage
+from pages.product_page import ProductPage
+
+
+def test_checkout(product_page: ProductPage) -> None:
     product_page.add_to_cart()
 
     cart_page = product_page.go_to_cart()
@@ -16,7 +20,7 @@ def test_checkout(product_page):
     assert product_page.is_loaded()
 
 
-def test_failed_checkout_empty_first_name(checkout_page):
+def test_failed_checkout_empty_first_name(checkout_page: CheckoutPage) -> None:
     checkout_page.set_first_name("")
     checkout_page.set_last_name("Doe")
     checkout_page.set_zip_code("12345")
@@ -25,7 +29,7 @@ def test_failed_checkout_empty_first_name(checkout_page):
     assert checkout_page.is_error_message_displayed("first_name")
 
 
-def test_failed_checkout_empty_last_name(checkout_page):
+def test_failed_checkout_empty_last_name(checkout_page: CheckoutPage) -> None:
     checkout_page.set_first_name("John")
     checkout_page.set_last_name("")
     checkout_page.set_zip_code("12345")
@@ -34,7 +38,7 @@ def test_failed_checkout_empty_last_name(checkout_page):
     assert checkout_page.is_error_message_displayed("last_name")
 
 
-def test_failed_checkout_empty_zip_code(checkout_page):
+def test_failed_checkout_empty_zip_code(checkout_page: CheckoutPage) -> None:
     checkout_page.set_first_name("John")
     checkout_page.set_last_name("Doe")
     checkout_page.set_zip_code("")
