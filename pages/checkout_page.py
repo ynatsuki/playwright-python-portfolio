@@ -10,6 +10,7 @@ class CheckoutPage:
         self.last_name_input = page.get_by_placeholder("Last Name")
         self.zip_code_input = page.get_by_placeholder("Zip/Postal Code")
         self.continue_button = page.get_by_role("button", name="Continue")
+        self.cancel_button = page.get_by_role("button", name="Cancel")
 
     def set_first_name(self, name: str) -> None:
         self.first_name_input.fill(name)
@@ -37,3 +38,6 @@ class CheckoutPage:
         elif error_type == "zip_code":
             return self.page.get_by_text("Error: Postal Code is required").is_visible()
         return False
+
+    def click_cancel(self) -> None:
+        self.cancel_button.click()

@@ -1,3 +1,4 @@
+from pages.cart_page import CartPage
 from pages.checkout_page import CheckoutPage
 from pages.product_page import ProductPage
 
@@ -45,3 +46,15 @@ def test_failed_checkout_empty_zip_code(checkout_page: CheckoutPage) -> None:
     checkout_page.click_continue()
 
     assert checkout_page.is_error_message_displayed("zip_code")
+
+
+def test_cancel_checkout(
+    checkout_page: CheckoutPage,
+    cart_page_object: CartPage,
+) -> None:
+    checkout_page.set_first_name("John")
+    checkout_page.set_last_name("Doe")
+    checkout_page.set_zip_code("12345")
+    checkout_page.click_cancel()
+
+    assert cart_page_object.is_displayed()

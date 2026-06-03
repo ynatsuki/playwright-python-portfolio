@@ -32,6 +32,11 @@ def cart_page(product_page: ProductPage) -> CartPage:
 
 
 @pytest.fixture
+def cart_page_object(page: Page) -> CartPage:
+    return CartPage(page)
+
+
+@pytest.fixture
 def checkout_page(product_page: ProductPage) -> CheckoutPage:
     product_page.add_to_cart()
     cart_page = product_page.go_to_cart()
