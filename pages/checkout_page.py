@@ -1,8 +1,10 @@
+from playwright.sync_api import Page
+
 from pages.checkout_overview_page import CheckoutOverviewPage
 
 
 class CheckoutPage:
-    def __init__(self, page):
+    def __init__(self, page: Page) -> None:
         self.page = page
         self.first_name_input = page.get_by_placeholder("First Name")
         self.last_name_input = page.get_by_placeholder("Last Name")
